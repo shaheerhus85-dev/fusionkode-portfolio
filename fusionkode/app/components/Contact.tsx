@@ -3,35 +3,50 @@
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export default function Contact() {
     const containerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
+        gsap.registerPlugin(ScrollTrigger);
         gsap.fromTo(contentRef.current, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: contentRef.current, start: "top 85%", toggleActions: "play none none reverse" } });
     }, { scope: containerRef });
 
     return (
-        <section ref={containerRef} id="contact" className="relative w-full pt-24 md:pt-40 pb-16 bg-[#000000] px-6 md:px-12 overflow-hidden flex flex-col items-center">
-            <div ref={contentRef} className="w-full max-w-[1320px]">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 lg:gap-32 items-start">
+        <section ref={containerRef} id="contact" className="relative w-full py-24 md:py-48 bg-[#0a0a0c] px-6 md:px-12 overflow-hidden flex flex-col items-center border-t border-white/5">
+            {/* DEPTH GLOW */}
+            <div className="absolute inset-0 depth-glow-cyan pointer-events-none opacity-20" />
+
+            <div className="w-full max-w-[1320px] relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 lg:gap-32 items-center">
                     <div className="flex flex-col gap-10 text-center md:text-left">
-                        <span className="font-mono text-[12px] uppercase tracking-[0.4em] text-white/40">[ ESTABLISH CONNECTION ]</span>
-                        <h3 className="font-display font-bold uppercase tracking-tighter text-white mt-8 leading-[0.9]" style={{ fontSize: 'clamp(32px, 7vw, 100px)' }}>START THE <br />BUILD.</h3>
-                        <a href="https://wa.me/923390140860" className="cta-underline-draw inline-flex items-center justify-center md:justify-start gap-6 group w-fit mx-auto md:mx-0 py-2 relative">
-                            <span className="font-mono text-[13px] uppercase tracking-[0.3em] text-white">WhatsApp Protocol</span>
-                            <span className="line absolute bottom-0 left-0 h-[1px] w-0 bg-white transition-all duration-500" />
-                        </a>
+                        <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-cyan/40">[ ESTABLISH CONNECTION ]</span>
+                        <h3 className="font-display font-black uppercase tracking-tighter text-white mt-8 leading-none" style={{ fontSize: 'var(--font-size-h2)' }}>START THE <br />BUILD.</h3>
+                        <div className="mt-8 flex justify-center md:justify-start">
+                            <div className="premium-glow rounded-full">
+                                <a href="https://wa.me/923390140860" className="btn-premium flex items-center gap-4 bg-white/5">
+                                    WhatsApp Protocol <span>→</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div className="relative border border-white/[0.05] p-8 md:p-12 bg-white/[0.02] flex flex-col gap-10 w-full glass-panel">
-                        <form className="flex flex-col gap-8" onSubmit={(e) => e.preventDefault()}>
-                            <input type="text" className="bg-transparent border-b border-white/10 p-2 font-mono text-[11px] uppercase focus:outline-none focus:border-white transition-colors" placeholder="Identification // Name" />
-                            <input type="email" className="bg-transparent border-b border-white/10 p-2 font-mono text-[11px] uppercase focus:outline-none focus:border-white transition-colors" placeholder="Contact // Email" />
-                            <button className="cta-glow-outline flex items-center justify-center gap-6 group mt-6 bg-white text-black py-4 px-10 font-mono text-[12px] uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-500">
-                                <span>Transmit Proposal</span>
-                                <span className="group-hover:translate-x-2 transition-transform">→</span>
-                            </button>
+                    <div className="relative p-10 md:p-16 bg-white/[0.01] flex flex-col gap-10 w-full glass-panel rounded-[2rem]">
+                        <form className="flex flex-col gap-10" onSubmit={(e) => e.preventDefault()}>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/20 ml-2">Identification</label>
+                                <input type="text" className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl font-mono text-sm uppercase focus:outline-none focus:border-cyan/40 focus:bg-white/[0.05] transition-all" placeholder="YOUR_NAME" />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <label className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/20 ml-2">Contact Router</label>
+                                <input type="email" className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl font-mono text-sm uppercase focus:outline-none focus:border-cyan/40 focus:bg-white/[0.05] transition-all" placeholder="YOUR_EMAIL" />
+                            </div>
+                            <div className="premium-glow rounded-2xl w-full">
+                                <button className="btn-premium w-full bg-cyan text-black font-black border-none hover:bg-white hover:text-black">
+                                    Transmit Proposal
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>

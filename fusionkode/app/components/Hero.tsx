@@ -3,100 +3,98 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export default function Hero() {
     const containerRef = useRef<HTMLDivElement>(null);
+    const hookRef = useRef<HTMLHeadingElement>(null);
+    const subtextRef = useRef<HTMLParagraphElement>(null);
     const marqueeRef = useRef<HTMLDivElement>(null);
-    const line1Ref = useRef<HTMLDivElement>(null);
-    const line2Ref = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Infinite Looping Marquee
         gsap.to(marqueeRef.current, {
             xPercent: -50,
-            duration: 30,
+            duration: 25,
             ease: "none",
             repeat: -1,
-            force3D: true,
         });
 
         const tl = gsap.timeline({ delay: 0.5 });
-        const splitLine1 = line1Ref.current?.querySelectorAll('.char');
-        const splitLine2 = line2Ref.current?.querySelectorAll('.char');
 
-        tl.fromTo(splitLine1 || [],
-            { clipPath: 'inset(0 100% 0 0)', y: 20, opacity: 0 },
-            {
-                clipPath: 'inset(0 0% 0 0)',
-                y: 0,
-                opacity: 1,
-                stagger: 0.04,
-                duration: 1.2,
-                ease: "expo.out"
-            }
-        ).fromTo(splitLine2 || [],
-            { clipPath: 'inset(0 100% 0 0)', y: 20, opacity: 0 },
-            {
-                clipPath: 'inset(0 0% 0 0)',
-                y: 0,
-                opacity: 1,
-                stagger: 0.04,
-                duration: 1.2,
-                ease: "expo.out"
-            },
-            "-=0.8"
-        );
+        tl.fromTo(hookRef.current,
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }
+        )
+            .fromTo(subtextRef.current,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 1, ease: "power2.out" },
+                "-=0.6"
+            );
     }, { scope: containerRef });
-
-    const renderCharacters = (text: string) => {
-        return text.split('').map((char, i) => (
-            <span key={i} className="char inline-block will-change-transform">
-                {char === ' ' ? '\u00A0' : char}
-            </span>
-        ));
-    };
 
     return (
         <section
             ref={containerRef}
-            className="hero-section relative w-full h-[110vh] overflow-hidden grid-background flex items-center justify-center"
+            className="hero-section relative w-full h-screen flex items-center justify-center bg-[#0A0A0B] overflow-hidden"
         >
-            <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none overflow-hidden">
-                <div
-                    ref={marqueeRef}
-                    className="flex whitespace-nowrap will-change-transform opacity-[0.05]"
-                    style={{ transform: 'translate3d(0,0,0)' }}
-                >
-                    <span className="font-display font-black uppercase text-outline px-[5vw]" style={{ fontSize: 'clamp(200px, 30vw, 600px)' }}>FUSIONKODE</span>
-                    <span className="font-display font-black uppercase text-outline px-[5vw]" style={{ fontSize: 'clamp(200px, 30vw, 600px)' }}>FUSIONKODE</span>
+            {/* Layer 1: Kinetic Background Marquee - Forced Absolute No-Flow */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] select-none pointer-events-none z-0 overflow-hidden">
+                <div ref={marqueeRef} className="flex whitespace-nowrap will-change-transform">
+                    {Array(4).fill(0).map((_, i) => (
+                        <span key={i} className="font-display font-black uppercase text-[40vw] md:text-[30vw] tracking-tighter px-[5vw] text-white leading-none">
+                            FUSIONKODE
+                        </span>
+                    ))}
                 </div>
             </div>
 
-            <div className="relative z-10 w-full max-w-[1440px] px-8 md:px-16 flex flex-col items-center text-center">
-                <div className="flex flex-col gap-4 md:gap-8">
-                    <div ref={line1Ref} className="overflow-hidden">
-                        <h2 className="font-mono uppercase tracking-[0.5em] text-white/60 mb-4" style={{ fontSize: 'clamp(18px, 2vw, 28px)' }}>
-                            {renderCharacters('AI • WEB • APP • SEO • AI AGENTS')}
-                        </h2>
+            {/* Layer 2: Subtle Mesh Gradient */}
+            <div className="absolute inset-0 mesh-gradient opacity-30 pointer-events-none z-[1]" />
+
+            <div className="relative z-10 w-full max-w-[1440px] px-6 md:px-12 flex flex-col items-center justify-center text-center">
+                <div className="flex flex-col gap-8 md:gap-12 items-center mt-32 md:mt-40">
+                    <div className="premium-glow rounded-full">
+                        <span className="font-mono text-[10px] md:text-[12px] uppercase tracking-[0.5em] text-cyan/70 border border-cyan/20 bg-cyan/5 px-6 py-3 rounded-full inline-block font-bold">
+                            System Protocol Activated v2.1
+                        </span>
                     </div>
-                    <div ref={line2Ref} className="overflow-hidden">
-                        <h1 className="font-display font-bold uppercase text-white tracking-tighter leading-[0.85]" style={{ fontSize: 'clamp(48px, 8vw, 140px)' }}>
-                            {renderCharacters('BUILDING DIGITAL SYSTEMS')}
-                        </h1>
-                    </div>
-                    <p className="font-sans text-white/40 md:text-xl leading-relaxed mt-4 max-w-2xl mx-auto">
-                        Architecting intelligent automation and scalable digital systems that solve complex business problems while you focus on growth.
+
+                    <h1
+                        ref={hookRef}
+                        className="font-display font-black uppercase tracking-tighter leading-[0.9] text-white"
+                        style={{ fontSize: 'var(--font-size-hero)' }}
+                    >
+                        TRANSFORMING <br />
+                        <span className="text-cyan drop-shadow-[0_0_25px_rgba(0,242,255,0.5)]">BUSINESS LOGIC</span> <br />
+                        INTO AUTOMATION.
+                    </h1>
+
+                    <p
+                        ref={subtextRef}
+                        className="font-sans text-white/40 max-w-2xl mx-auto leading-relaxed md:text-2xl font-light italic"
+                    >
+                        Architecting high-performance AI systems and autonomous agents for businesses operating at the edge of possibility.
                     </p>
-                    <div className="mt-12 flex justify-center gap-8 md:gap-16">
-                        <a href="#contact" className="cta-underline-draw font-mono text-[10px] md:text-[12px] uppercase tracking-[0.3em] text-white group relative py-2">
-                            [ Start Your System ]
-                            <span className="line absolute bottom-0 left-0 h-[1px] w-0 bg-white transition-all duration-500" />
-                        </a>
-                        <a href="#work" className="cta-underline-draw font-mono text-[10px] md:text-[12px] uppercase tracking-[0.3em] text-white group relative py-2">
-                            [ View Case Logs ]
-                            <span className="line absolute bottom-0 left-0 h-[1px] w-0 bg-white transition-all duration-500" />
+
+                    <div className="mt-10 flex flex-col md:flex-row gap-8 items-center">
+                        <div className="premium-glow rounded-full">
+                            <a href="#contact" className="btn-premium px-12 py-6">
+                                Start Consultation
+                            </a>
+                        </div>
+                        <a href="#lab" className="font-mono text-[11px] uppercase tracking-[0.4em] text-white/30 hover:text-white transition-all group flex items-center gap-3">
+                            Explore Build Lab <span className="inline-block transition-transform group-hover:translate-x-2">→</span>
                         </a>
                     </div>
                 </div>
+            </div>
+
+            {/* Subtle Scroll Indicator */}
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-20">
+                <div className="w-[1px] h-10 bg-gradient-to-b from-white to-transparent animate-pulse" />
             </div>
         </section>
     );
